@@ -1,54 +1,51 @@
-// pages/home/home.js
+// pages/shoplist/shoplist.js
 Page({
 
   /**
    * 页面的初始数据
    */
   data: {
-    //存放轮播图数据
-    swiperList:[],
-    //九宫格
-    gridList:[]
+    query:{},
+    shopList:[],
+    page:1,
+    pageSize:10,
+    total:0
   },
-
+  //获取数据商品列表
+  getShopList(){
+    wx.request({
+      url: 'https://www.escook.cn/categories/${this.data.query.id}/shops',
+      method:'GET',
+      data:{
+        _page:this.data.page,
+        _limit:this.data.pageSizez
+      },
+      success:(res)=>{
+        this.setData({
+          shopList:[...this.data.shopList,...res.data],
+          total:res.header['X-Total-Count']-0
+        })
+        console.log(res)
+      }
+    })
+  },
   /**
    * 生命周期函数--监听页面加载
    */
   onLoad: function (options) {
-    this.getSwiperList()
-    this.getGridList()
-  },
-  
-  //获取轮播图数据方法
-  getSwiperList(){
-    wx.request({
-      url: 'https://www.escook.cn/slides',
-      method:'GET',
-      success:(res)=>{
-        console.log(res)
-        this.setData({
-          swiperList:res.data
-        })
-      }
+    this.setData({
+      query:options
     })
+    this.getShopList()
   },
-  //获取九宫格数据的方法
-  getGridList(){
-    wx.request({
-      url: 'https://www.escook.cn/categories',
-      method:'GET',
-      success:(res)=>{
-        this.setData({
-          gridList:res.data
-        })
-      }
-    })
-  },
+
   /**
    * 生命周期函数--监听页面初次渲染完成
    */
   onReady: function () {
-
+    wx.setNavigationBarTitle({
+      title: this.data.query.title,
+    })
   },
 
   /**

@@ -32,6 +32,7 @@ swiper image{
   margin-top: 10rpx;
 }
 
+
 .img-box{
   display: flex;
   padding: 20rpx 10rpx;
